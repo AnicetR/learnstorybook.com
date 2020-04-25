@@ -1,18 +1,17 @@
 ---
-title: 'Guide : Storybook pour React'
-tocTitle: 'Commencer'
-description: 'Mettre en place Storybook dans votre environnement de développement'
+title: 'Storybook for React tutorial'
+tocTitle: 'Get started'
+description: 'Setup Storybook in your development environment'
 commit: ebe2ae2
 ---
 
-Storybook fonctionne en parallèle de votre application en mode développement. Il vous aide à construire des éléments d'UI isolés de la logique métier et du contexte de votre application. Cette version du guide "Apprendre Storybook" est dédiée React. D'autres versions (en anglais) existent pour [React Native](/react-native/en/get-started), [Vue](/vue/en/get-started), [Angular](/angular/en/get-started) et [Svelte](/svelte/en/get-started).
+Storybook runs alongside your app in development mode. It helps you build UI components isolated from the business logic and context of your app. This edition of Learn Storybook is for React; other editions exist for [React Native](/react-native/en/get-started), [Vue](/vue/en/get-started), [Angular](/angular/en/get-started) and [Svelte](/svelte/en/get-started).
 
-![Storybook et votre application (en anglais)](/intro-to-storybook/storybook-relationship.jpg)
+![Storybook and your app](/intro-to-storybook/storybook-relationship.jpg)
 
-## Mettre en place Storybook pour React
+## Setup React Storybook
 
-Nous devons suivre quelques étapes pour mettre en place le processus de build dans votre environnement. Pour commencer, nous allons utiliser [Create React App](https://github.com/facebook/create-react-app) (CRA) pour mettre en place le système de build et activer [Storybook](https://storybook.js.org/) et [Jest](https://facebook.github.io/jest/) afin de tester l'app ainsi créée.
-Lançons les commandes suivantes : 
+We’ll need to follow a few steps to get the build process set up in your environment. To start with, we want to use [Create React App](https://github.com/facebook/create-react-app) (CRA) to setup our build system, and enable [Storybook](https://storybook.js.org/) and [Jest](https://facebook.github.io/jest/) testing in our created app. Let’s run the following commands:
 
 ```bash
 # Create our application:
@@ -25,12 +24,12 @@ npx -p @storybook/cli sb init
 ```
 
 <div class="aside">
-Au long de cette version du guide, nous allons utiliser <code>yarn</code> afin de lancer la majorité des commandes.
-Si vous avez yarn d'installé mais que vous préférez utiliser <code>npm</code> à la place, pas de problème, vous pouvez toujours suivre ce guide sans aucun soucis. Ajoutez simplement le paramètre <code>--use-npm</code> à la première commande ci-dessus, ainsi CRA et Storybook s'initialiseront correctement. Aussi, tout au long du guide, n'oubliez pas d'ajuster les commandes afin d'utiliser leurs équivalents <code>npm</code>.
+Throughout this version of the tutorial, we'll be using <code>yarn</code> to run the majority of our commands. 
+If you have Yarn installed, but prefer to use <code>npm</code> instead, don't worry, you can still go through the tutorial without any issues. Just add the <code>--use-npm</code> flag to the first command above and both CRA and Storybook will initialize based on this. Also while you progress through the tutorial, don't forget to adjust the commands used to their <code>npm</code> counterparts.
 </div>
 
 
-Nous vérifions rapidement que les divers environnements de notre application fonctionnent correctement :
+We can quickly check that the various environments of our application are working properly:
 
 ```bash
 # Run the test runner (Jest) in a terminal:
@@ -44,31 +43,31 @@ yarn start
 ```
 
 <div class="aside"> 
-Vous avez peut-être remarqué que nous avons ajouté le paramètre <code>--watchAll</code> à la commande de test. Ne vous inquiétez pas, c'est normal : ce petit changement nous assure que tous les tests fonctionnent et que tout est ok avec notre application. Lors de votre progression dans ce guide, differents scenarios de tests vous seront introduits, il est alors interessant d'ajouter ce paramètre au script de test dans votre <code>package.json</code> afin de s'assurer que tous vos tests se lancent correctement.
+You may have noticed we've added the <code>--watchAll</code> flag to our test command, don't worry it's intentional, this small change will ensure that all tests run and everything is ok with our application. While you progress through this tutorial you will be introduced to different test scenarios, so probably you might want to consider and add the flag to your test script in your <code>package.json</code> to ensure your entire test suite runs.
 </div>
 
-L'app dispose désormais de trois modes de fonctionnement : test automatisés (Jest), développement de composants (Storybook), et l'application en elle-même.
+Our three frontend app modalities: automated test (Jest), component development (Storybook), and the app itself.
 
-![3 modes de fonctionnement](/intro-to-storybook/app-three-modalities.png)
+![3 modalities](/intro-to-storybook/app-three-modalities.png)
 
-En fonction de la partie de l'app sur laquelle vous travaillez, vous aurez peut-être besoin de lancer un ou plusieurs modes de fonctionnement simultanément. Dans ce guide nous nous concentrons sur la création de composants d'UI simples, nous ne lancerons donc que Storybook.
+Depending on what part of the app you’re working on, you may want to run one or more of these simultaneously. Since our current focus is creating a single UI component, we’ll stick with running Storybook.
 
-## Réutilisation des CSS
+## Reuse CSS
 
-Taskbox réutilise les éléments de designs du ["GraphQL and React Tutorial"](https://blog.hichroma.com/graphql-react-tutorial-part-1-6-d0691af25858) (en anglais), nous n'aurons donc pas besoin d'écrire de CSS dans ce guide. Copiez-collez [ce code CSS compilé](https://github.com/chromaui/learnstorybook-code/blob/master/src/index.css) dans le fichier `src/index.css`. (ndt: *Taskbox* est conservé en anglais tout au long du guide de sorte à correspondre au mieux aux extraits de codes/screenshots présentés, c'est aussi le cas pour *Task*, *TaskList*... etc)
+Taskbox reuses design elements from the GraphQL and React Tutorial [example app](https://blog.hichroma.com/graphql-react-tutorial-part-1-6-d0691af25858), so we won’t need to write CSS in this tutorial. Copy and paste [this compiled CSS](https://github.com/chromaui/learnstorybook-code/blob/master/src/index.css) into the `src/index.css` file.
 
-![UI de Taskbox (/intro-to-storybook/ss-browserchrome-taskbox-learnstorybook.png)
+![Taskbox UI](/intro-to-storybook/ss-browserchrome-taskbox-learnstorybook.png)
 
 <div class="aside">
-Si vous voulez modifier l'apparence, les sources LESS sont disponibles sur le dépot Github.
+If you want to modify the styling, the source LESS files are provided in the GitHub repo.
 </div>
 
-## Ajouter les assets
+## Add assets
 
-Afin de correspondre au desgin recherché, vous aurez besoin de télécharger les dossiers 'icon' et de 'font' et de placer leurs contenus dans votre dossier `public`.
+To match the intended design, you'll need to download both the font and icon directories and place its contents inside your `public` folder.
 
 <div class="aside">
-<p>Nous avons utilisé <code>svn</code> (Subversion) afin de télécharger simplement un dossier de fichiers depuis Github. Si vous n'avez pas subversion d'installé ou que vous ne voulez pas l'utiliser, vous pouvez récupérer les dossiers directement <a href="https://github.com/chromaui/learnstorybook-code/tree/master/public">ici</a>.</p></div>
+<p>We’ve used <code>svn</code> (Subversion) to easily download a folder of files from GitHub. If you don’t have subversion installed or want to just do it manually, you can grab the folders directly <a href="https://github.com/chromaui/learnstorybook-code/tree/master/public">here</a>.</p></div>
 
 ```bash
 svn export https://github.com/chromaui/learnstorybook-code/branches/master/public/icon public/icon
@@ -76,4 +75,4 @@ svn export https://github.com/chromaui/learnstorybook-code/branches/master/publi
 ```
 
 
-Après avoir ajouté les styles et les assets, l'application aura un rendu *étrange*. C'est normal : nous n'allons pas travailler sur l'application mais sur les composants dans StoryBook. Nous allons plutôt commencer en construisant notre premier composant !
+After adding styling and assets, the app will render a bit strangely. That’s OK. We aren’t working on the app right now. We’re starting off with building our first component!

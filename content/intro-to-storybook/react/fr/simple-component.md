@@ -5,26 +5,26 @@ description: 'Build a simple component in isolation'
 commit: 403f19a
 ---
 
-We’ll build our UI following a [Component-Driven Development](https://blog.hichroma.com/component-driven-development-ce1109d56c8e) (CDD) methodology. It’s a process that builds UIs from the “bottom up” starting with components and ending with screens. CDD helps you scale the amount of complexity you’re faced with as you build out the UI.
+Nous allons construire notre UI en suivant une méthodologie de [Développement orienté composant (Component-Driven Development)](https://blog.hichroma.com/component-driven-development-ce1109d56c8e) (CDD). C'est un processus qui consiste à construire notre UI de "bas en haut", en commençant par les composants et en terminant par les écrans. CDD permet d'échelonner le niveau de complexité auquel vous devez faire face lorsque vous construisez votre UI.
 
 ## Task
 
 ![Task component in three states](/intro-to-storybook/task-states-learnstorybook.png)
 
-`Task` is the core component in our app. Each task displays slightly differently depending on exactly what state it’s in. We display a checked (or unchecked) checkbox, some information about the task, and a “pin” button, allowing us to move tasks up and down the list. Putting this together, we’ll need these props:
+`Task` est le composant principal de notre application. Chaque *task* s'affiche légèrement differemment en fonction de l'état dans lequel elle est. Nous affichons une checkbox cochée (ou décochée), quelques informations à propos de la tâche et un bouton "épingler" (pin dans le code), qui nous permettra de bouger une *task* en haut ou en bas de la liste. Afin d'obtenir ce comportement, nous aurons besoin de ces props:
 
-- `title` – a string describing the task
-- `state` - which list is the task currently in and is it checked off?
+- `title` – une chaine de caractères décrivant la *task*
+- `state` - dans quelle liste est la *task* actuellement et si elle est cochée
 
-As we start to build `Task`, we first write our test states that correspond to the different types of tasks sketched above. Then we use Storybook to build the component in isolation using mocked data. We’ll “visual test” the component’s appearance given each state as we go.
+Alors que nous commençons à construire `Task`, nous allons commencer par écrire nos états (`states`) de test, correspondant aux differents types de *tasks* présentés plus haut dans l'image. Nous utiliserons en suite Storybook afin de construire le composant en isolation en utilisat de données factices (*mocked data*). Nous allons "tester visuellement" l'apparence du composant pour chaque état au fur et à mesure.
 
-This process is similar to [Test-driven development](https://en.wikipedia.org/wiki/Test-driven_development) (TDD) that we can call “[Visual TDD](https://blog.hichroma.com/visual-test-driven-development-aec1c98bed87)”.
+Ce processus est similaire au [Développement orienté tests (Test-driven development)](https://en.wikipedia.org/wiki/Test-driven_development) (TDD) que nous pouvons alors appeler "[TDD Visuel](https://blog.hichroma.com/visual-test-driven-development-aec1c98bed87)".
 
-## Get setup
+## Mise en place
 
-First, let’s create the task component and its accompanying story file: `src/components/Task.js` and `src/components/Task.stories.js`.
+Premièrement, nous allons créer le composant *task* et son fichier de *story* correspondant: `src/components/Task.js` et `src/components/Task.stories.js`.
 
-We’ll begin with a basic implementation of the `Task`, simply taking in the attributes we know we’ll need and the two actions you can take on a task (to move it between lists):
+Nous commencerons avec un implémentation simple du composant `Task`, en prenant simplement les attributs dont nous savons avoir besoin ainsi que les deux actions possibles sur une *task* (afin de la déplacer entre les lists) :
 
 ```javascript
 // src/components/Task.js
@@ -40,9 +40,9 @@ export default function Task({ task: { id, title, state }, onArchiveTask, onPinT
 }
 ```
 
-Above, we render straightforward markup for `Task` based on the existing HTML structure of the Todos app.
+Au dessus, nous envoyons au rendu une écriture simple pour `Task` basé sur la structure HTML de la *Todos app*.
 
-Below we build out Task’s three test states in the story file:
+En dessous, nous allons construire les trois états de test pour `Task` dans le fichier de story:
 
 ```javascript
 // src/components/Task.stories.js
@@ -80,22 +80,22 @@ export const Pinned = () => (
 export const Archived = () => <Task task={{ ...taskData, state: 'TASK_ARCHIVED' }} {...actionsData} />;
 ```
 
-There are two basic levels of organization in Storybook: the component and its child stories. Think of each story as a permutation of a component. You can have as many stories per component as you need.
+Il y a deux niveaux d'organisation basique dans Storybook : le composant et ses stories enfants. Il faut voir chaque story comme une permutation du composant. Vous pouvez avoir autant que stories par composant que vous le désirez.
 
 - **Component**
   - Story
   - Story
   - Story
 
-To tell Storybook about the component we are documenting, we create a `default` export that contains:
+Afin de donner à Storybook les informations du composant que nous documentons, nous avons à créer un export `default` qui doit contenir :
 
 - `component` -- the component itself,
 - `title` -- how to refer to the component in the sidebar of the Storybook app,
 - `excludeStories` -- exports in the story file that should not be rendered as stories by Storybook.
 
-To define our stories, we export a function for each of our test states to generate a story. The story is a function that returns a rendered element (i.e. a component with a set of props) in a given state---exactly like a [Stateless Functional Component](https://reactjs.org/docs/components-and-props.html).
+Afin de définir nos stories, il faut exporter une fonction pour chacun de nos tests afin de générer la story correspondante. La story est une fonction qui renvoie un élément rendu (i.e. un composant avec une liste définie de props) dans un étant donné. Exactement comme un [composant sans état (Stateless Functional Component)](https://reactjs.org/docs/components-and-props.html)
 
-`action()` allows us to create a callback that appears in the **actions** panel of the Storybook UI when clicked. So when we build a pin button, we’ll be able to determine in the test UI if a button click is successful.
+`action()` nous permet de créer un callback qui apparait dans le panneau **actions** de l'interface de Storybook. Donc lorsque nous construiront le bon "épingler", nous serons capable de déterminer depuis l'UI de test si le clique fonctionne.
 
 As we need to pass the same set of actions to all permutations of our component, it is convenient to bundle them up into a single `actionsData` variable and use React's `{...actionsData}` props expansion to pass them all at once. `<Task {...actionsData}>` is equivalent to `<Task onPinTask={actionsData.onPinTask} onArchiveTask={actionsData.onArchiveTask}>`.
 
